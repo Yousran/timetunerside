@@ -171,7 +171,7 @@ public class PageAddProject extends VBox  {
         imageView.setFitHeight(20);
         addBudgetBtn.setGraphic(imageView);
 
-        addBudgetBtn.setOnAction(event -> addNewBudgetHandler(budgetNameField.getText(), Integer.parseInt(budgetPriceField.getText())));
+        addBudgetBtn.setOnAction(event -> addNewBudgetHandler());
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
         remainingBudget = new Label("Remaining Budget : " + calculateBudget(project_budget, budgets));
@@ -190,11 +190,42 @@ public class PageAddProject extends VBox  {
         return budgetListVBox;
     }
 
-    private void addNewBudgetHandler(String budget_name, int price){
-        Budget newBudget = new Budget(0, 0, budget_name, price);
+    private void addNewBudgetHandler() {
+        boolean isEmptyField = false;
+    
+        if (budgetNameField.getText().isEmpty()) {
+            budgetNameField.getStyleClass().add("error");
+            budgetNameField.setPromptText("Budget name is required");
+            isEmptyField = true;
+        }
+    
+        if (budgetPriceField.getText().isEmpty()) {
+            budgetPriceField.getStyleClass().add("error");
+            budgetPriceField.setPromptText("Budget price is required");
+            isEmptyField = true;
+        } else {
+            try {
+                Integer.parseInt(budgetPriceField.getText());
+            } catch (NumberFormatException e) {
+                budgetPriceField.getStyleClass().add("error");
+                budgetPriceField.clear();
+                budgetPriceField.setPromptText("Must be a number");
+                isEmptyField = true;
+            }
+        }
+    
+        if (isEmptyField) {
+            budgetNameField.setOnKeyTyped(event -> budgetNameField.getStyleClass().remove("error"));
+            budgetPriceField.setOnKeyTyped(event -> budgetPriceField.getStyleClass().remove("error"));
+            return;
+        }
+        Budget newBudget = new Budget(0, 0, budgetNameField.getText(), Integer.parseInt(budgetPriceField.getText()));
         budgets.add(newBudget);
         refreshBudgetList();
-    }
+    
+        budgetNameField.clear();
+        budgetPriceField.clear();
+    } 
 
     private void refreshBudgetList() {
         budgetList();

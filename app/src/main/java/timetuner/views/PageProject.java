@@ -27,6 +27,8 @@ public class PageProject extends VBox {
     VBox teamListVBox = new VBox();
     Label remainingBudget;
     TextField usernameField = new TextField();
+    TextField budgetNameField = new TextField();
+    TextField budgetPriceField = new TextField();
 
     public PageProject(Project project){
         super();
@@ -163,10 +165,9 @@ public class PageProject extends VBox {
         totalBudget.getStyleClass().add("h5");
         HBox headHBox = new HBox(totalBudget);
 
-        TextField budgetNameField = new TextField();
         budgetNameField.setPromptText("Budget Name");
-        TextField budgetPriceField = new TextField();
         budgetPriceField.setPromptText("Value");
+
         Button addBudgetBtn = new Button();
         addBudgetBtn.getStyleClass().add("btn-icon");
         Image image = new Image(getClass().getResourceAsStream("/icons/list-plus-regular-240.png"));
@@ -174,7 +175,7 @@ public class PageProject extends VBox {
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
         addBudgetBtn.setGraphic(imageView);
-        addBudgetBtn.setOnAction(event -> addNewBudgetHandler(budgetNameField.getText(), Integer.parseInt(budgetPriceField.getText())));
+        addBudgetBtn.setOnAction(event -> addNewBudgetHandler());
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
         remainingBudget = new Label("Remaining Budget : " + calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId())));
@@ -193,10 +194,42 @@ public class PageProject extends VBox {
         return budgetListVBox;
     }
 
-    private void addNewBudgetHandler(String budget_name, int price){
-        BudgetController.addBudget(project.getId(), budget_name, price);
+    private void addNewBudgetHandler() {
+        boolean isEmptyField = false;
+    
+        if (budgetNameField.getText().isEmpty()) {
+            budgetNameField.getStyleClass().add("error");
+            budgetNameField.setPromptText("Budget name is required");
+            isEmptyField = true;
+        }
+    
+        if (budgetPriceField.getText().isEmpty()) {
+            budgetPriceField.getStyleClass().add("error");
+            budgetPriceField.setPromptText("Budget price is required");
+            isEmptyField = true;
+        } else {
+            try {
+                Integer.parseInt(budgetPriceField.getText());
+            } catch (NumberFormatException e) {
+                budgetPriceField.getStyleClass().add("error");
+                budgetPriceField.clear();
+                budgetPriceField.setPromptText("Must be a number");
+                isEmptyField = true;
+            }
+        }
+    
+        if (isEmptyField) {
+            budgetNameField.setOnKeyTyped(event -> budgetNameField.getStyleClass().remove("error"));
+            budgetPriceField.setOnKeyTyped(event -> budgetPriceField.getStyleClass().remove("error"));
+            return;
+        }
+    
+        BudgetController.addBudget(project.getId(), budgetNameField.getText(), Integer.parseInt(budgetPriceField.getText()));
         refreshBudgetList();
-    }
+    
+        budgetNameField.clear();
+        budgetPriceField.clear();
+    }    
 
     private void refreshBudgetList() {
         budgetList();
