@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import timetuner.App;
 import timetuner.controllers.UserController;
 
 public class SceneLogin {
@@ -65,6 +66,26 @@ public class SceneLogin {
     }
 
     private void loginButtonHandler() {
+        boolean isEmptyField = false;
+    
+        if (emailField.getText().isEmpty()) {
+            emailField.getStyleClass().add("error");
+            emailField.setPromptText("Email is required");
+            isEmptyField = true;
+        }
+    
+        if (passwordField.getText().isEmpty()) {
+            passwordField.getStyleClass().add("error");
+            passwordField.setPromptText("Password is required");
+            isEmptyField = true;
+        }
+    
+        if (isEmptyField) {
+            emailField.setOnKeyTyped(event -> emailField.getStyleClass().remove("error"));
+            passwordField.setOnKeyTyped(event -> passwordField.getStyleClass().remove("error"));
+            return;
+        }
+    
         boolean loginSuccess = UserController.login(emailField.getText(), passwordField.getText());
         if (!loginSuccess) {
             emailField.getStyleClass().add("error");
@@ -74,11 +95,14 @@ public class SceneLogin {
             emailField.setPromptText("Login failed, try again");
             passwordField.setPromptText("Login failed, try again");
         } else {
-            System.out.println("Berhasil Login");
+            System.out.println(App.loggedUser.getUsername() + " Berhasil Login");
             emailField.clear();
             passwordField.clear();
             SceneMain sceneMain = new SceneMain(primaryStage, screenWidth, screenHeight);
             sceneMain.show();
         }
-    }
+        emailField.setOnKeyTyped(event -> emailField.getStyleClass().remove("error"));
+        passwordField.setOnKeyTyped(event -> passwordField.getStyleClass().remove("error"));
+    }    
+    
 }

@@ -56,6 +56,22 @@ public class UserController extends DbConnect{
         return false;
     }
 
+    public static boolean cekEmail(String email){
+        query = "SELECT email FROM user WHERE email=?";
+        try {
+            getConnection();
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, email);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                boolean valid = resultSet.next();
+                return valid;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public static User getUser(int id) {
         String query = "SELECT * FROM user WHERE id=?";
         try {
@@ -81,10 +97,11 @@ public class UserController extends DbConnect{
         }
         return null;
     }
+
     public static User findUser(String username) {
         String query = "SELECT * FROM user WHERE username=?";
         try {
-            getConnection();  // Ini akan mempersiapkan 'connection' yang sudah ada di DbConnect
+            getConnection();
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
@@ -102,7 +119,6 @@ public class UserController extends DbConnect{
             try {
                 if (resultSet != null) resultSet.close();
                 if (preparedStatement != null) preparedStatement.close();
-                // Tidak menutup 'connection' di sini jika ingin reuse connection
             } catch (SQLException ex) {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }

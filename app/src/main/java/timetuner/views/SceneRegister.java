@@ -71,6 +71,47 @@ public class SceneRegister {
     }
 
     private void registerButtonHandler() {
+        boolean isEmptyField = false;
+    
+        if (usernameField.getText().isEmpty()) {
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("Username is required");
+            isEmptyField = true;
+        }
+    
+        if (emailField.getText().isEmpty()) {
+            emailField.getStyleClass().add("error");
+            emailField.setPromptText("Email is required");
+            isEmptyField = true;
+        }
+        
+        if (UserController.cekEmail(emailField.getText())) {
+            emailField.getStyleClass().add("error");
+            emailField.clear();
+            emailField.setPromptText("Email Already Exist");
+            isEmptyField = true;
+        }
+    
+        if (passwordField.getText().isEmpty()) {
+            passwordField.getStyleClass().add("error");
+            passwordField.setPromptText("Password is required");
+            isEmptyField = true;
+        }
+    
+        if (confirmPasswordField.getText().isEmpty()) {
+            confirmPasswordField.getStyleClass().add("error");
+            confirmPasswordField.setPromptText("Confirm password is required");
+            isEmptyField = true;
+        }
+    
+        if (isEmptyField) {
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+            emailField.setOnKeyTyped(event -> emailField.getStyleClass().remove("error"));
+            passwordField.setOnKeyTyped(event -> passwordField.getStyleClass().remove("error"));
+            confirmPasswordField.setOnKeyTyped(event -> confirmPasswordField.getStyleClass().remove("error"));
+            return;
+        }
+    
         if (!passwordField.getText().equals(confirmPasswordField.getText())) {
             passwordField.getStyleClass().add("error");
             confirmPasswordField.getStyleClass().add("error");
@@ -78,16 +119,12 @@ public class SceneRegister {
             confirmPasswordField.clear();
             passwordField.setPromptText("Passwords do not match");
             confirmPasswordField.setPromptText("Passwords do not match");
+            passwordField.setOnKeyTyped(event -> passwordField.getStyleClass().remove("error"));
+            confirmPasswordField.setOnKeyTyped(event -> confirmPasswordField.getStyleClass().remove("error"));
             return;
         }
-
-        boolean registrationSuccess = UserController.register(
-            usernameField.getText(),
-            emailField.getText(),
-            passwordField.getText(),
-            "");
-
-        if (!registrationSuccess) {
+    
+        if (!UserController.register(usernameField.getText(),emailField.getText(),passwordField.getText(),null)) {
             usernameField.getStyleClass().add("error");
             emailField.getStyleClass().add("error");
             passwordField.getStyleClass().add("error");
@@ -103,5 +140,10 @@ public class SceneRegister {
         } else {
             new SceneLogin(primaryStage, screenWidth, screenHeight).show();
         }
-    }
+    
+        usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+        emailField.setOnKeyTyped(event -> emailField.getStyleClass().remove("error"));
+        passwordField.setOnKeyTyped(event -> passwordField.getStyleClass().remove("error"));
+        confirmPasswordField.setOnKeyTyped(event -> confirmPasswordField.getStyleClass().remove("error"));
+    }    
 }
