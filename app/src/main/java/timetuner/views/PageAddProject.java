@@ -2,8 +2,6 @@ package timetuner.views;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import javafx.beans.binding.StringBinding;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -14,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 import timetuner.App;
 import timetuner.controllers.BudgetController;
 import timetuner.controllers.ProjectController;
@@ -31,7 +30,7 @@ public class PageAddProject extends VBox  {
     Label remainingBudget;
     List<Budget> budgets = new ArrayList<>();
     List<User> users = new ArrayList<>();
-
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     TextField field_project_name = new TextField();
     DatePicker field_due_date = new DatePicker();
     TextField field_total_budget = new TextField();
@@ -147,6 +146,30 @@ public class PageAddProject extends VBox  {
         HBox hbox = new HBox(10);
         hbox.getStyleClass().add("card");
 
+        // Set the DatePicker to use the desired format
+        field_due_date.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return formatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, formatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+
+        field_due_date.getEditor().setPromptText("yyyy-MM-dd");
+        field_due_date.getStyleClass().add("text-field");
+
         VBox vboxName = new VBox(new Label("Project Name"), field_project_name);
         VBox vboxDueDate = new VBox(new Label("Due Date"), field_due_date);
 
@@ -244,7 +267,7 @@ public class PageAddProject extends VBox  {
 
     private void saveBtnHandler(){
         project_name = field_project_name.getText();
-        due_date = field_due_date.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        due_date = field_due_date.getValue().format(formatter);
         project_budget = Integer.parseInt(field_total_budget.getText());
     
         Project newProject = ProjectController.addProject(project_name, due_date, project_budget, null);
@@ -278,5 +301,4 @@ public class PageAddProject extends VBox  {
         budgetListVBox.getChildren().clear();
         remainingBudget.setText("Remaining Budget : " + 0);
     }
-    
 }
