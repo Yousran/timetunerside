@@ -26,6 +26,7 @@ public class PageProject extends VBox {
     VBox budgetListVBox = new VBox();
     VBox teamListVBox = new VBox();
     Label remainingBudget;
+    TextField usernameField = new TextField();
 
     public PageProject(Project project){
         super();
@@ -67,8 +68,9 @@ public class PageProject extends VBox {
         Label subTitleLabel = new Label("Team Members:");
         subTitleLabel.getStyleClass().add("h4");
 
-        TextField usernameField = new TextField();
         usernameField.setPromptText("Enter Username");
+        usernameField.getStyleClass().add("text-field");
+
         Button addMemberBtn = new Button();
         addMemberBtn.getStyleClass().add("btn-icon");
         Image image = new Image(getClass().getResourceAsStream("/icons/user-plus-solid-240.png"));
@@ -76,7 +78,7 @@ public class PageProject extends VBox {
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
         addMemberBtn.setGraphic(imageView);
-        addMemberBtn.setOnAction(event -> addNewTeamMember(usernameField.getText()));
+        addMemberBtn.setOnAction(event -> addNewTeamMember());
 
         HBox field = new HBox(addMemberBtn, usernameField);
         teamStatus.getChildren().addAll(subTitleLabel, field, teamList());
@@ -95,14 +97,26 @@ public class PageProject extends VBox {
         return teamMember;
     }
 
-    //TODO: add new member perlu feedback jika username tidak ditemukan
-    private void addNewTeamMember(String username) {
+    private void addNewTeamMember() {
+        String username = usernameField.getText();
+
+        if (username == null || username.isEmpty()) {
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("Username is required");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+            return;
+        }
+
         User user = UserController.findUser(username);
         if (user != null) {
             TeamMemberController.addMember(project.getId(), user.getId());
             refreshTeamList();
         } else {
-            System.out.println("User not found");
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("User Not Found");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
         }
     }
 

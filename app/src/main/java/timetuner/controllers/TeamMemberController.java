@@ -31,7 +31,7 @@ public class TeamMemberController extends DbConnect{
         }
         return users;
     }
-    public static void addMember(int project_id, int user_id) {
+    public static boolean addMember(int project_id, int user_id) {
         String query = "INSERT INTO team_members (project_id, user_id) VALUES (?, ?)";
         try {
             getConnection();
@@ -40,13 +40,14 @@ public class TeamMemberController extends DbConnect{
             preparedStatement.setInt(2, user_id);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows > 0) {
-                System.out.println("Member added successfully.");
+                return true;
             } else {
-                System.out.println("No rows affected.");
+                return false;
             }
         } catch (Exception e) {
             System.err.println("Error adding member: " + e.getMessage());
+            return false;
         }
-    }   
+    }
     
 }

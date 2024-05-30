@@ -110,7 +110,6 @@ public class UserController extends DbConnect{
                 String email = resultSet.getString("email");
                 String password = resultSet.getString("password");
                 String profile_path = resultSet.getString("profil_path");
-                System.out.println("User :" + username + " found");
                 return new User(id, username, email, password, profile_path);
             }
         } catch (SQLException e) {

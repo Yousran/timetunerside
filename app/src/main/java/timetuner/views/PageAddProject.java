@@ -96,7 +96,7 @@ public class PageAddProject extends VBox  {
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
         addMemberBtn.setGraphic(imageView);
-        addMemberBtn.setOnAction(event -> addNewTeamMember(usernameField.getText()));
+        addMemberBtn.setOnAction(event -> addNewTeamMember());
 
         field.getChildren().addAll(addMemberBtn,usernameField);
 
@@ -116,14 +116,26 @@ public class PageAddProject extends VBox  {
         return teamMember;
     }
 
-    //TODO: add new member perlu feedback jika username tidak ditemukan
-    private void addNewTeamMember(String username) {
+    private void addNewTeamMember() {
+        String username = usernameField.getText();
+
+        if (username == null || username.isEmpty()) {
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("Username is required");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+            return;
+        }
+
         User user = UserController.findUser(username);
         if (user != null) {
             users.add(user);
             refreshTeamList();
         } else {
-            System.out.println("User not found");
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("User Not Found");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
         }
     }
 
