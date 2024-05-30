@@ -12,9 +12,9 @@ import java.time.temporal.ChronoUnit;
 
 public class CardProject extends Button {
         public CardProject(Project project) {
-        this.getStyleClass().add("card-button");
+        this.getStyleClass().add("card-btn");
 
-        HBox hbox = new HBox(10); // Main container for all VBoxes
+        HBox hbox = new HBox(10);
         hbox.getChildren().addAll(
             createPropertySection("Project Name", project.getProject_name()),
             createPropertySection("Due Date", project.getDue_date()),

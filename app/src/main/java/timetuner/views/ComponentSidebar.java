@@ -3,6 +3,7 @@ package timetuner.views;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
@@ -42,21 +43,24 @@ public class ComponentSidebar extends VBox {
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(30);
         imageView.setFitHeight(30);
+        ColorAdjust colorAdjust = new ColorAdjust();
+        colorAdjust.setBrightness(1.0);
+
+        imageView.setEffect(colorAdjust);
         
         btn.setGraphic(imageView);
         btn.setContentDisplay(ContentDisplay.LEFT);
         btn.setAlignment(Pos.CENTER_LEFT);
-        btn.setOnAction(event -> BtnClickHandler(btn));
         btn.getStyleClass().add("button");
+        btn.setOnAction(event -> BtnClickHandler(btn));
 
         return btn;
     }
 
-    //TODO: state active masih belum berjalan
     private void BtnClickHandler(Button clickedButton) {
         btnSetFalse();
-        sceneMain.updatePage(clickedButton.getText());
         clickedButton.getStyleClass().add("button-active");
+        sceneMain.updatePage(clickedButton.getText());
     }
     private void btnSetFalse() {
         btnDashboard.getStyleClass().remove("button-active");

@@ -69,7 +69,13 @@ public class PageProject extends VBox {
 
         TextField usernameField = new TextField();
         usernameField.setPromptText("Enter Username");
-        Button addMemberBtn = new Button("Add Member");
+        Button addMemberBtn = new Button();
+        addMemberBtn.getStyleClass().add("btn-icon");
+        Image image = new Image(getClass().getResourceAsStream("/icons/user-plus-solid-240.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        addMemberBtn.setGraphic(imageView);
         addMemberBtn.setOnAction(event -> addNewTeamMember(usernameField.getText()));
 
         HBox field = new HBox(addMemberBtn, usernameField);
@@ -147,7 +153,13 @@ public class PageProject extends VBox {
         budgetNameField.setPromptText("Budget Name");
         TextField budgetPriceField = new TextField();
         budgetPriceField.setPromptText("Value");
-        Button addBudgetBtn = new Button("+");
+        Button addBudgetBtn = new Button();
+        addBudgetBtn.getStyleClass().add("btn-icon");
+        Image image = new Image(getClass().getResourceAsStream("/icons/list-plus-regular-240.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        addBudgetBtn.setGraphic(imageView);
         addBudgetBtn.setOnAction(event -> addNewBudgetHandler(budgetNameField.getText(), Integer.parseInt(budgetPriceField.getText())));
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);

@@ -54,7 +54,7 @@ public class SceneLogin {
         buttonContainer.getStyleClass().add("container");
     
         VBox mainContainer = new VBox(fieldContainer, buttonContainer);
-        mainContainer.getStyleClass().addAll("form", "container");
+        mainContainer.getStyleClass().addAll("form");
         StackPane.setAlignment(mainContainer, Pos.CENTER);
         root.getChildren().add(mainContainer);
     }    

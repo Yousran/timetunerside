@@ -14,12 +14,13 @@ public class SceneMain {
     private double screenWidth;
     private double screenHeight;
     private Scene scene;
-    public static VBox content = new VBox();
+    public static VBox content;
 
     public SceneMain(Stage primaryStage, double screenWidth, double screenHeight) {
         this.primaryStage = primaryStage;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+        content = new VBox();
 
         ComponentSidebar sidebar = new ComponentSidebar(this);
         ComponentNavbar navbar = new ComponentNavbar(this);

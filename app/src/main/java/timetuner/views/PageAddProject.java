@@ -57,7 +57,7 @@ public class PageAddProject extends VBox  {
         Label subTitleAddNewProject = new Label("Add New Project");
         subTitleAddNewProject.getStyleClass().add("h3");
         Button saveButton = new Button("Save");
-        saveButton.getStyleClass().add("button");
+        saveButton.getStyleClass().add("btn");
         saveButton.setOnAction(event -> saveBtnHandler());
 
         Region spacer = new Region();
@@ -88,7 +88,14 @@ public class PageAddProject extends VBox  {
         subTitleLabel.getStyleClass().add("h4");
 
         usernameField.setPromptText("Enter Username");
-        Button addMemberBtn = new Button("Add Member");
+
+        Button addMemberBtn = new Button();
+        addMemberBtn.getStyleClass().add("btn-icon");
+        Image image = new Image(getClass().getResourceAsStream("/icons/user-plus-solid-240.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        addMemberBtn.setGraphic(imageView);
         addMemberBtn.setOnAction(event -> addNewTeamMember(usernameField.getText()));
 
         field.getChildren().addAll(addMemberBtn,usernameField);
@@ -143,7 +150,15 @@ public class PageAddProject extends VBox  {
 
         budgetNameField.setPromptText("Budget Name");
         budgetPriceField.setPromptText("Value");
-        Button addBudgetBtn = new Button("+");
+
+        Button addBudgetBtn = new Button();
+        addBudgetBtn.getStyleClass().add("btn-icon");
+        Image image = new Image(getClass().getResourceAsStream("/icons/list-plus-regular-240.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        addBudgetBtn.setGraphic(imageView);
+
         addBudgetBtn.setOnAction(event -> addNewBudgetHandler(budgetNameField.getText(), Integer.parseInt(budgetPriceField.getText())));
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
