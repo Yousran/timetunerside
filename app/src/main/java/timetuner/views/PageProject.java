@@ -1,10 +1,7 @@
 package timetuner.views;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
+import java.util.List;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -14,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import timetuner.SelfUtils;
 import timetuner.controllers.BudgetController;
 import timetuner.controllers.TeamMemberController;
 import timetuner.controllers.UserController;
@@ -133,7 +131,7 @@ public class PageProject extends VBox {
         hbox.getChildren().addAll(
             createPropertySection("Project Name", project.getProject_name()),
             createPropertySection("Due Date", project.getDue_date()),
-            createPropertySection("Time Left", calculateTimeLeft(project.getDue_date()))
+            createPropertySection("Time Left", SelfUtils.calculateTimeLeft(project.getDue_date()))
         );
         return hbox;
     }
@@ -178,7 +176,7 @@ public class PageProject extends VBox {
         addBudgetBtn.setOnAction(event -> addNewBudgetHandler());
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
-        remainingBudget = new Label("Remaining Budget : " + calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId())));
+        remainingBudget = new Label("Remaining Budget : " + SelfUtils.calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId())));
 
         budgetStatus.getChildren().addAll(headHBox, addBudget, budgetList(), remainingBudget);
         return budgetStatus;
@@ -233,26 +231,8 @@ public class PageProject extends VBox {
 
     private void refreshBudgetList() {
         budgetList();
-        int updatedRemainingBudget = calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId()));
+        int updatedRemainingBudget = SelfUtils.calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId()));
         remainingBudget.setText("Remaining Budget : " + updatedRemainingBudget);
     }
 
-    private int calculateBudget(int totalBudget, List<Budget> budgets) {
-        int totalSpent = 0;
-        for (Budget budget : budgets) {
-            totalSpent += budget.getPrice();
-        }
-        return totalBudget - totalSpent;
-    }
-
-    private String calculateTimeLeft(String dueDate) {
-        try {
-            LocalDate endDate = LocalDate.parse(dueDate, DateTimeFormatter.ISO_LOCAL_DATE);
-            LocalDate today = LocalDate.now();
-            long daysBetween = ChronoUnit.DAYS.between(today, endDate);
-            return daysBetween + " days";
-        } catch (Exception e) {
-            return "Invalid date";
-        }
-    }
 }

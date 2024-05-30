@@ -14,6 +14,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import timetuner.App;
+import timetuner.SelfUtils;
 import timetuner.controllers.BudgetController;
 import timetuner.controllers.ProjectController;
 import timetuner.controllers.TeamMemberController;
@@ -205,7 +206,7 @@ public class PageAddProject extends VBox  {
         addBudgetBtn.setOnAction(event -> addNewBudgetHandler());
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
-        remainingBudget = new Label("Remaining Budget : " + calculateBudget(project_budget, budgets));
+        remainingBudget = new Label("Remaining Budget : " + SelfUtils.calculateBudget(project_budget, budgets));
         remainingBudget.getStyleClass().add("h5-thin");
 
         budgetStatus.getChildren().addAll(headHBox, addBudget, budgetList(), remainingBudget);
@@ -262,16 +263,8 @@ public class PageAddProject extends VBox  {
     private void refreshBudgetList() {
         budgetList();
         project_budget = Integer.parseInt(field_total_budget.getText());
-        int updatedRemainingBudget = calculateBudget(project_budget, budgets);
+        int updatedRemainingBudget = SelfUtils.calculateBudget(project_budget, budgets);
         remainingBudget.setText("Remaining Budget : " + updatedRemainingBudget);
-    }
-
-    private int calculateBudget(int totalBudget, List<Budget> budgets) {
-        int totalSpent = 0;
-        for (Budget budget : budgets) {
-            totalSpent += budget.getPrice();
-        }
-        return totalBudget - totalSpent;
     }
 
     private void saveBtnHandler() {
