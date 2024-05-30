@@ -16,7 +16,7 @@ public class PageDashboard extends VBox {
         subTitle.getStyleClass().add("h3");
         this.getChildren().add(subTitle);
         VBox projectList = new VBox();
-        projectList.setStyle("-fx-padding: 0 1em; -fx-spacing: 1em;");
+        projectList.setStyle("-fx-padding: 0 1em; -fx-spacing: 1em;-fx-background-color:-color-background;");
         projectList.setSpacing(10);
         for (Project project : ProjectController.getAllProjects()) {
             CardProject card = new CardProject(project);

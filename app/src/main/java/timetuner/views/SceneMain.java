@@ -2,6 +2,7 @@ package timetuner.views;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -29,10 +30,11 @@ public class SceneMain {
         HBox containerHBox = new HBox(sidebar, containerVBox);
 
         StackPane root = new StackPane(containerHBox);
+        root.getStyleClass().add("background");
         StackPane.setAlignment(containerHBox, Pos.CENTER);
 
         scene = new Scene(root, screenWidth, screenHeight);
-        scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(App.style).toExternalForm());
         sidebar.prefWidthProperty().bind(scene.widthProperty().multiply(0.2));
         content.prefWidthProperty().bind(scene.widthProperty().multiply(0.8));
         navbar.prefHeightProperty().bind(scene.heightProperty().multiply(0.1));
@@ -55,7 +57,22 @@ public class SceneMain {
                 content.getChildren().add(new PageAddProject());
                 break;
             case "Settings":
-                content.getChildren().add(new Label("Modify settings here"));
+                VBox settingsContainer = new VBox();
+                Label settingsLabel = new Label("Modify settings here");
+
+                CheckBox darkModeToggle = new CheckBox("Dark Mode");
+                darkModeToggle.setSelected(App.style.equals("/styles/styles-dark.css"));
+                darkModeToggle.setOnAction(event -> {
+                    if (darkModeToggle.isSelected()) {
+                        App.style = "/styles/styles-dark.css";
+                    } else {
+                        App.style = "/styles/styles.css";
+                    }
+                    reloadStyle();
+                });
+
+                settingsContainer.getChildren().addAll(settingsLabel, darkModeToggle);
+                content.getChildren().add(settingsContainer);
                 break;
             case "Logout":
                 App.loggedUser = null;
@@ -63,5 +80,13 @@ public class SceneMain {
                 loginScene.show();
                 break;
         }
+    }
+    private void reloadStyle() {
+        scene.getStylesheets().clear();
+    
+        String stylePath = getClass().getResource(App.style).toExternalForm();
+        scene.getStylesheets().add(stylePath);
+    
+        updatePage("Settings");
     }
 }

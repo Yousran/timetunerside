@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import timetuner.App;
 import timetuner.controllers.UserController;
 
 public class SceneRegister {
@@ -28,7 +29,7 @@ public class SceneRegister {
 
         root = new StackPane();
         scene = new Scene(root, screenWidth, screenHeight);
-        scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(App.style).toExternalForm());
 
         usernameField = new TextField();
         usernameField.setPromptText("Enter your username");
@@ -63,6 +64,7 @@ public class SceneRegister {
         mainContainer.getStyleClass().addAll("form","container");
         StackPane.setAlignment(mainContainer, Pos.CENTER);
         root.getChildren().add(mainContainer);
+        root.getStyleClass().add("background");
     }
 
     public void show() {

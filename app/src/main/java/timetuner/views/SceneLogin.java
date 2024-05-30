@@ -29,8 +29,7 @@ public class SceneLogin {
         root = new StackPane();
         scene = new Scene(root, screenWidth, screenHeight);
         
-        scene.getStylesheets().add(getClass().getResource("/styles/styles.css").toExternalForm());
-
+        scene.getStylesheets().add(getClass().getResource(App.style).toExternalForm());
     
         emailField = new TextField();
         emailField.setPromptText("Enter your email");
@@ -58,6 +57,7 @@ public class SceneLogin {
         mainContainer.getStyleClass().addAll("form");
         StackPane.setAlignment(mainContainer, Pos.CENTER);
         root.getChildren().add(mainContainer);
+        root.getStyleClass().add("background");
     }    
 
     public void show() {

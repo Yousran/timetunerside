@@ -6,10 +6,10 @@
     -color-info: #2196F3;
     -color-warning: #FFC107;
     -color-clear: rgba(0, 0, 0, 0);
-    -color-disable: #B1B1B1;
-    -color-background: #E5E5E5;
-    -color-text: #343C6A;
-    -color-card: #ffffff;
+    -color-disable: #575757;
+    -color-background: #1E1E1E;
+    -color-text: #E0E0E0;
+    -color-card: #2C2C2C;
 }
 
 .background {
@@ -69,8 +69,8 @@
 
 .text-field {
     -fx-background-color: -color-card;
-    -fx-border-color: -color-disable;
-    -fx-text-fill: -color-disable;
+    -fx-border-color: -color-text;
+    -fx-text-fill: -color-text;
     -fx-font-weight: bold;
     -fx-background-radius: 0.5em;
     -fx-border-radius: 0.5em;
@@ -111,14 +111,14 @@
 
 .sidebar {
     -fx-background-color: -color-primary;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 0.7em, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.3), 0.7em, 0, 0, 0);
 }
 
 .sidebar .button {
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-weight: bold;
     -fx-background-color: -color-clear;
-    -fx-text-fill: -color-card;
+    -fx-text-fill: white;
     -fx-border-color: -color-clear;
     -fx-border-radius: 0;
     -fx-background-radius: 0;
@@ -180,5 +180,5 @@
 }
 
 .card-btn:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 0.7em, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.1), 0.7em, 0, 0, 0);
 }

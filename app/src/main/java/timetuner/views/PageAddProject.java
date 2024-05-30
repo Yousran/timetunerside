@@ -170,8 +170,15 @@ public class PageAddProject extends VBox  {
         field_due_date.getEditor().setPromptText("yyyy-MM-dd");
         field_due_date.getStyleClass().add("text-field");
 
-        VBox vboxName = new VBox(new Label("Project Name"), field_project_name);
-        VBox vboxDueDate = new VBox(new Label("Due Date"), field_due_date);
+
+        Label labelProjectName = new Label("Project Name");
+        labelProjectName.getStyleClass().add("h5");
+        VBox vboxName = new VBox(labelProjectName, field_project_name);
+
+        Label labelDueDate = new Label("Due Date");
+        labelDueDate.getStyleClass().add("h5");
+        VBox vboxDueDate = new VBox(labelDueDate, field_due_date);
+
 
         hbox.getChildren().addAll(vboxName, vboxDueDate);
         return hbox;
@@ -199,6 +206,7 @@ public class PageAddProject extends VBox  {
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
         remainingBudget = new Label("Remaining Budget : " + calculateBudget(project_budget, budgets));
+        remainingBudget.getStyleClass().add("h5-thin");
 
         budgetStatus.getChildren().addAll(headHBox, addBudget, budgetList(), remainingBudget);
         return budgetStatus;

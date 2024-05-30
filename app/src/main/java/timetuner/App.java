@@ -11,7 +11,7 @@ import timetuner.views.SceneLogin;
 public class App extends Application {
     public static User loggedUser = null;
     public static String AppName = "Time Tuner";
-    //TODO:dark mode
+    public static String style = "/styles/styles.css";
     //TODO:utils
     //TODO:intToRupiah
     //TODO:remove budget dengan membuat button di samping kiri budget yang akan muncul jika di hover
