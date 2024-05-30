@@ -11,7 +11,6 @@ import timetuner.views.SceneLogin;
 public class App extends Application {
     public static User loggedUser = null;
     public static String AppName = "Time Tuner";
-    //TODO:validasi field addproject
     //TODO:dark mode
     //TODO:utils
     //TODO:intToRupiah

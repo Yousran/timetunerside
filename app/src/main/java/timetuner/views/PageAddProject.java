@@ -146,7 +146,6 @@ public class PageAddProject extends VBox  {
         HBox hbox = new HBox(10);
         hbox.getStyleClass().add("card");
 
-        // Set the DatePicker to use the desired format
         field_due_date.setConverter(new StringConverter<LocalDate>() {
             @Override
             public String toString(LocalDate date) {
@@ -167,6 +166,7 @@ public class PageAddProject extends VBox  {
             }
         });
 
+        field_project_name.setPromptText("Project");
         field_due_date.getEditor().setPromptText("yyyy-MM-dd");
         field_due_date.getStyleClass().add("text-field");
 
@@ -181,6 +181,7 @@ public class PageAddProject extends VBox  {
         VBox budgetStatus = new VBox();
         budgetStatus.getStyleClass().add("card");
         field_total_budget.setPromptText("Total Budget");
+        field_total_budget.getStyleClass().add("text-field");
         HBox headHBox = new HBox(field_total_budget);
 
         budgetNameField.setPromptText("Budget Name");
@@ -265,7 +266,44 @@ public class PageAddProject extends VBox  {
         return totalBudget - totalSpent;
     }
 
-    private void saveBtnHandler(){
+    private void saveBtnHandler() {
+        boolean isEmptyField = false;
+        boolean isWrongDataType = false;
+    
+        if (field_project_name.getText().isEmpty()) {
+            field_project_name.getStyleClass().add("error");
+            field_project_name.setPromptText("Project name is required");
+            isEmptyField = true;
+        }
+    
+        if (field_due_date.getValue() == null || field_due_date.getEditor() == null) {
+            field_due_date.getStyleClass().add("error");
+            field_due_date.getEditor().clear();
+            field_due_date.setPromptText("Due date is required");
+            isEmptyField = true;
+        }
+    
+        if (field_total_budget.getText().isEmpty()) {
+            field_total_budget.getStyleClass().add("error");
+            field_total_budget.setPromptText("Budget is required");
+            isEmptyField = true;
+        } else {
+            try {
+                Integer.parseInt(field_total_budget.getText());
+            } catch (NumberFormatException e) {
+                field_total_budget.getStyleClass().add("error");
+                field_total_budget.clear();
+                field_total_budget.setPromptText("Must be a number");
+                isEmptyField = true;
+            }
+        }
+    
+        if (isEmptyField || isWrongDataType) {
+            field_project_name.setOnKeyTyped(event -> field_project_name.getStyleClass().remove("error"));
+            field_total_budget.setOnKeyTyped(event -> field_total_budget.getStyleClass().remove("error"));
+            return;
+        }
+    
         project_name = field_project_name.getText();
         due_date = field_due_date.getValue().format(formatter);
         project_budget = Integer.parseInt(field_total_budget.getText());
@@ -282,16 +320,24 @@ public class PageAddProject extends VBox  {
             clearFields();
             refreshTeamList();
             refreshBudgetList();
-            System.out.println("Project added successfully");
         } else {
-            System.out.println("Failed to add the project");
+            field_project_name.getStyleClass().add("error");
+            field_due_date.getStyleClass().add("error");
+            field_total_budget.getStyleClass().add("error");
+            field_project_name.clear();
+            field_due_date.setValue(null);
+            field_project_name.setPromptText("Add Project Failed");
+            field_due_date.setPromptText("Add Project Failed");
+            field_total_budget.clear();
+            field_total_budget.setPromptText("Add Project Failed");
         }
-    }
+    }    
     
     private void clearFields() {
         budgets.clear();
         users.clear();
         field_project_name.clear();
+        field_due_date.getEditor().clear();
         field_total_budget.clear();
         budgetNameField.clear();
         budgetPriceField.clear();
