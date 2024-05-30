@@ -159,7 +159,7 @@ public class PageProject extends VBox {
         VBox budgetStatus = new VBox();
         budgetStatus.getStyleClass().add("card");
 
-        Label totalBudget = new Label("Budget : " + project.getBudget());
+        Label totalBudget = new Label("Budget : " + SelfUtils.intToRupiah(project.getBudget()));
         totalBudget.getStyleClass().add("h5");
         HBox headHBox = new HBox(totalBudget);
 
@@ -176,7 +176,7 @@ public class PageProject extends VBox {
         addBudgetBtn.setOnAction(event -> addNewBudgetHandler());
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
-        remainingBudget = new Label("Remaining Budget : " + SelfUtils.calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId())));
+        remainingBudget = new Label("Remaining Budget : " + SelfUtils.intToRupiah(SelfUtils.calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId()))));
 
         budgetStatus.getChildren().addAll(headHBox, addBudget, budgetList(), remainingBudget);
         return budgetStatus;
@@ -186,7 +186,7 @@ public class PageProject extends VBox {
         budgetListVBox.getChildren().clear();
         List<Budget> budgets = BudgetController.getBudgets(project.getId());
         for (Budget budget : budgets) {
-            Label budgetLabel = new Label(budget.getBudget_name() + " : " + budget.getPrice());
+            Label budgetLabel = new Label(budget.getBudget_name() + " : " + SelfUtils.intToRupiah(budget.getPrice()));
             budgetListVBox.getChildren().add(budgetLabel);
         }
         return budgetListVBox;
@@ -232,7 +232,7 @@ public class PageProject extends VBox {
     private void refreshBudgetList() {
         budgetList();
         int updatedRemainingBudget = SelfUtils.calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId()));
-        remainingBudget.setText("Remaining Budget : " + updatedRemainingBudget);
+        remainingBudget.setText("Remaining Budget : " + SelfUtils.intToRupiah(updatedRemainingBudget));
     }
 
 }

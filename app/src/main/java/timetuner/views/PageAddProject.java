@@ -206,7 +206,7 @@ public class PageAddProject extends VBox  {
         addBudgetBtn.setOnAction(event -> addNewBudgetHandler());
 
         HBox addBudget = new HBox(addBudgetBtn, budgetNameField, budgetPriceField);
-        remainingBudget = new Label("Remaining Budget : " + SelfUtils.calculateBudget(project_budget, budgets));
+        remainingBudget = new Label("Remaining Budget : " + SelfUtils.intToRupiah(SelfUtils.calculateBudget(project_budget, budgets)));
         remainingBudget.getStyleClass().add("h5-thin");
 
         budgetStatus.getChildren().addAll(headHBox, addBudget, budgetList(), remainingBudget);
@@ -217,7 +217,7 @@ public class PageAddProject extends VBox  {
         budgetListVBox.getChildren().clear();
 
         for (Budget budget : budgets) {
-            Label budgetLabel = new Label(budget.getBudget_name() + " : " + budget.getPrice());
+            Label budgetLabel = new Label(budget.getBudget_name() + " : " + SelfUtils.intToRupiah(budget.getPrice()));
             budgetListVBox.getChildren().add(budgetLabel);
         }
         return budgetListVBox;
@@ -256,6 +256,8 @@ public class PageAddProject extends VBox  {
         budgets.add(newBudget);
         refreshBudgetList();
     
+        budgetNameField.setText("");
+        budgetPriceField.setText("");
         budgetNameField.clear();
         budgetPriceField.clear();
     } 
@@ -264,7 +266,7 @@ public class PageAddProject extends VBox  {
         budgetList();
         project_budget = Integer.parseInt(field_total_budget.getText());
         int updatedRemainingBudget = SelfUtils.calculateBudget(project_budget, budgets);
-        remainingBudget.setText("Remaining Budget : " + updatedRemainingBudget);
+        remainingBudget.setText("Remaining Budget : " + SelfUtils.intToRupiah(updatedRemainingBudget));
     }
 
     private void saveBtnHandler() {
@@ -346,6 +348,6 @@ public class PageAddProject extends VBox  {
         field_due_date.setValue(null);
         teamListVBox.getChildren().clear();
         budgetListVBox.getChildren().clear();
-        remainingBudget.setText("Remaining Budget : " + 0);
+        remainingBudget.setText("Remaining Budget : " + SelfUtils.intToRupiah(0));
     }
 }

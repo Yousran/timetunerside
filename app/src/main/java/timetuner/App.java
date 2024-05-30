@@ -12,7 +12,6 @@ public class App extends Application {
     public static User loggedUser = null;
     public static String AppName = "Time Tuner";
     public static String style = "/styles/styles.css";
-    //TODO:intToRupiah
     //TODO:remove budget dengan membuat button di samping kiri budget yang akan muncul jika di hover
     @Override
     public void start(Stage primaryStage) throws Exception {

@@ -4,6 +4,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import timetuner.SelfUtils;
 import timetuner.models.Project;
 import javafx.scene.control.Label;
 import java.time.LocalDate;
@@ -19,7 +20,7 @@ public class CardProject extends Button {
             createPropertySection("Project Name", project.getProject_name()),
             createPropertySection("Due Date", project.getDue_date()),
             createPropertySection("Time Left", calculateTimeLeft(project.getDue_date())),
-            createPropertySection("Budget", String.valueOf(project.getBudget()))
+            createPropertySection("Budget", SelfUtils.intToRupiah(project.getBudget()))
         );
 
         this.setGraphic(hbox);
