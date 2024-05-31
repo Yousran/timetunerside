@@ -4,6 +4,7 @@
 package timetuner;
 
 import javafx.application.Application;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import timetuner.models.User;
 import timetuner.views.SceneLogin;
@@ -12,12 +13,15 @@ public class App extends Application {
     public static User loggedUser = null;
     public static String AppName = "Time Tuner";
     public static String style = "/styles/styles.css";
+    //TODO: Settings
     //TODO:remove budget dengan membuat button di samping kiri budget yang akan muncul jika di hover
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setResizable(true);
         // primaryStage.setMaximized(true);
         primaryStage.setTitle(AppName);
+        Image appIcon = new Image(getClass().getResourceAsStream("/icons/app-logo.png"));
+        primaryStage.getIcons().add(appIcon);
         SceneLogin sceneLogin = new SceneLogin(primaryStage,1024,720);
         sceneLogin.show();
     }
