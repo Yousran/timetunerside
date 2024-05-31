@@ -25,7 +25,7 @@ import timetuner.models.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PageAddProject extends VBox  {
+public class PageAddProject extends VBox implements InterfacePageProject  {
     VBox budgetListVBox = new VBox();
     VBox teamListVBox = new VBox();
     Label remainingBudget;
@@ -69,80 +69,7 @@ public class PageAddProject extends VBox  {
         this.getChildren().addAll(subTitle, hBox);
     }
     
-
-    public VBox teamList(){
-        teamListVBox.getChildren().clear();
-
-        for (User user : users) {
-            teamListVBox.getChildren().add(teamMember(user));
-        }
-        return teamListVBox;
-    }
-
-    public VBox teamStatus() {
-        VBox teamStatus = new VBox();
-        HBox field = new HBox();
-        teamStatus.getStyleClass().add("card");
-
-        Label subTitleLabel = new Label("Add Team Member:");
-        subTitleLabel.getStyleClass().add("h4");
-
-        usernameField.setPromptText("Enter Username");
-
-        Button addMemberBtn = new Button();
-        addMemberBtn.getStyleClass().add("btn-icon");
-        Image image = new Image(getClass().getResourceAsStream("/icons/user-plus-solid-240.png"));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
-        addMemberBtn.setGraphic(imageView);
-        addMemberBtn.setOnAction(event -> addNewTeamMember());
-
-        field.getChildren().addAll(addMemberBtn,usernameField);
-
-        teamStatus.getChildren().addAll(subTitleLabel, field, teamList());
-        return teamStatus;
-    }
-
-    public HBox teamMember(User user){
-        Image image = new Image(getClass().getResourceAsStream("/icons/user-circle-regular-240.png"));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
-        Label username = new Label(user.getUsername());
-        username.getStyleClass().add("h5");
-        HBox teamMember = new HBox(imageView, username);
-        teamMember.getStyleClass().add("container");
-        return teamMember;
-    }
-
-    private void addNewTeamMember() {
-        String username = usernameField.getText();
-
-        if (username == null || username.isEmpty()) {
-            usernameField.clear();
-            usernameField.getStyleClass().add("error");
-            usernameField.setPromptText("Username is required");
-            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
-            return;
-        }
-
-        User user = UserController.findUser(username);
-        if (user != null) {
-            users.add(user);
-            refreshTeamList();
-        } else {
-            usernameField.clear();
-            usernameField.getStyleClass().add("error");
-            usernameField.setPromptText("User Not Found");
-            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
-        }
-    }
-
-    private void refreshTeamList() {
-        teamList();
-    }
-
+    @Override
     public HBox projectStatus(){
         HBox hbox = new HBox(10);
         hbox.getStyleClass().add("card");
@@ -185,6 +112,33 @@ public class PageAddProject extends VBox  {
         return hbox;
     }
 
+    @Override
+    public VBox teamStatus() {
+        VBox teamStatus = new VBox();
+        HBox field = new HBox();
+        teamStatus.getStyleClass().add("card");
+
+        Label subTitleLabel = new Label("Add Team Member:");
+        subTitleLabel.getStyleClass().add("h4");
+
+        usernameField.setPromptText("Enter Username");
+
+        Button addMemberBtn = new Button();
+        addMemberBtn.getStyleClass().add("btn-icon");
+        Image image = new Image(getClass().getResourceAsStream("/icons/user-plus-solid-240.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        addMemberBtn.setGraphic(imageView);
+        addMemberBtn.setOnAction(event -> addNewTeamMember());
+
+        field.getChildren().addAll(addMemberBtn,usernameField);
+
+        teamStatus.getChildren().addAll(subTitleLabel, field, teamList());
+        return teamStatus;
+    }
+
+    @Override
     public VBox budgetStatus(){
         VBox budgetStatus = new VBox();
         budgetStatus.getStyleClass().add("card");
@@ -213,7 +167,31 @@ public class PageAddProject extends VBox  {
         return budgetStatus;
     }
 
-    private VBox budgetList(){
+    @Override
+    public VBox teamList(){
+        teamListVBox.getChildren().clear();
+
+        for (User user : users) {
+            teamListVBox.getChildren().add(teamMember(user));
+        }
+        return teamListVBox;
+    }
+
+    @Override
+    public HBox teamMember(User user){
+        Image image = new Image(getClass().getResourceAsStream("/icons/user-circle-regular-240.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        Label username = new Label(user.getUsername());
+        username.getStyleClass().add("h5");
+        HBox teamMember = new HBox(imageView, username);
+        teamMember.getStyleClass().add("container");
+        return teamMember;
+    }
+
+    @Override
+    public VBox budgetList(){
         budgetListVBox.getChildren().clear();
 
         for (Budget budget : budgets) {
@@ -223,7 +201,34 @@ public class PageAddProject extends VBox  {
         return budgetListVBox;
     }
 
-    private void addNewBudgetHandler() {
+    public void addNewTeamMember() {
+        String username = usernameField.getText();
+
+        if (username == null || username.isEmpty()) {
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("Username is required");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+            return;
+        }
+
+        User user = UserController.findUser(username);
+        if (user != null) {
+            users.add(user);
+            refreshTeamList();
+        } else {
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("User Not Found");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+        }
+    }
+
+    public void refreshTeamList() {
+        teamList();
+    }
+
+    public void addNewBudgetHandler() {
         boolean isEmptyField = false;
     
         if (budgetNameField.getText().isEmpty()) {
@@ -262,11 +267,15 @@ public class PageAddProject extends VBox  {
         budgetPriceField.clear();
     } 
 
-    private void refreshBudgetList() {
+    public void refreshBudgetList() {
         budgetList();
-        project_budget = Integer.parseInt(field_total_budget.getText());
-        int updatedRemainingBudget = SelfUtils.calculateBudget(project_budget, budgets);
-        remainingBudget.setText("Remaining Budget : " + SelfUtils.intToRupiah(updatedRemainingBudget));
+        try {
+            project_budget = Integer.parseInt(field_total_budget.getText());
+            int updatedRemainingBudget = SelfUtils.calculateBudget(project_budget, budgets);
+            remainingBudget.setText("Remaining Budget : " + SelfUtils.intToRupiah(updatedRemainingBudget));
+        } catch (NumberFormatException e) {
+
+        }
     }
 
     private void saveBtnHandler() {
@@ -323,6 +332,7 @@ public class PageAddProject extends VBox  {
             clearFields();
             refreshTeamList();
             refreshBudgetList();
+            ComponentSidebar.btnDashboard.fire();
         } else {
             field_project_name.getStyleClass().add("error");
             field_due_date.getStyleClass().add("error");

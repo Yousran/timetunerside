@@ -11,7 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class ComponentSidebar extends VBox {
-    private Button btnDashboard, btnAddNewProject, btnSettings, btnLogout;
+    public static Button btnDashboard, btnAddNewProject, btnSettings, btnLogout;
     private SceneMain sceneMain;
 
     public ComponentSidebar(SceneMain sceneMain){

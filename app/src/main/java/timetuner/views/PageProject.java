@@ -19,7 +19,7 @@ import timetuner.models.Budget;
 import timetuner.models.Project;
 import timetuner.models.User;
 
-public class PageProject extends VBox {
+public class PageProject extends VBox implements InterfacePageProject{
     Project project;
     VBox budgetListVBox = new VBox();
     VBox teamListVBox = new VBox();
@@ -51,16 +51,19 @@ public class PageProject extends VBox {
         this.getChildren().addAll(subTitle, hBox);
     }
 
-    public VBox teamList(){
-        teamListVBox.getChildren().clear();
-        List<User> users = TeamMemberController.getUsers(project.getId());
-
-        for (User user : users) {
-            teamListVBox.getChildren().add(teamMember(user));
-        }
-        return teamListVBox;
+    @Override
+    public HBox projectStatus() {
+        HBox hbox = new HBox(10);
+        hbox.getStyleClass().add("card");
+        hbox.getChildren().addAll(
+            createPropertySection("Project Name", project.getProject_name()),
+            createPropertySection("Due Date", project.getDue_date()),
+            createPropertySection("Time Left", SelfUtils.calculateTimeLeft(project.getDue_date()))
+        );
+        return hbox;
     }
 
+    @Override
     public VBox teamStatus() {
         VBox teamStatus = new VBox();
         teamStatus.getStyleClass().add("card");
@@ -85,77 +88,8 @@ public class PageProject extends VBox {
         return teamStatus;
     }
 
-    public HBox teamMember(User user){
-        Image image = new Image(getClass().getResourceAsStream("/icons/user-circle-regular-240.png"));
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
-        Label username = new Label(user.getUsername());
-        username.getStyleClass().add("h5");
-        HBox teamMember = new HBox(imageView, username);
-        teamMember.getStyleClass().add("container");
-        return teamMember;
-    }
-
-    private void addNewTeamMember() {
-        String username = usernameField.getText();
-
-        if (username == null || username.isEmpty()) {
-            usernameField.clear();
-            usernameField.getStyleClass().add("error");
-            usernameField.setPromptText("Username is required");
-            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
-            return;
-        }
-
-        User user = UserController.findUser(username);
-        if (user != null) {
-            TeamMemberController.addMember(project.getId(), user.getId());
-            refreshTeamList();
-        } else {
-            usernameField.clear();
-            usernameField.getStyleClass().add("error");
-            usernameField.setPromptText("User Not Found");
-            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
-        }
-    }
-
-    private void refreshTeamList() {
-        teamList();
-    }
-
-    public HBox projectStatus(){
-        HBox hbox = new HBox(10);
-        hbox.getStyleClass().add("card");
-
-        hbox.getChildren().addAll(
-            createPropertySection("Project Name", project.getProject_name()),
-            createPropertySection("Due Date", project.getDue_date()),
-            createPropertySection("Time Left", SelfUtils.calculateTimeLeft(project.getDue_date()))
-        );
-        return hbox;
-    }
-    private HBox createPropertySection(String title, String value) {
-        HBox hbox = new HBox();
-
-        VBox vbox = new VBox();
-        Label titleLabel = new Label(title);
-        titleLabel.getStyleClass().add("h5");
-        Label valueLabel = new Label(value);
-        valueLabel.getStyleClass().add("h5-thin");
-
-        vbox.getChildren().addAll(titleLabel, valueLabel);
-
-        Region spacerLeft = new Region();
-        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
-        Region spacerRight = new Region();
-        HBox.setHgrow(spacerRight, Priority.ALWAYS);
-
-        hbox.getChildren().addAll(spacerLeft, vbox, spacerRight);
-        return hbox;
-    }
-
-    public VBox budgetStatus(){
+    @Override
+    public VBox budgetStatus() {
         VBox budgetStatus = new VBox();
         budgetStatus.getStyleClass().add("card");
 
@@ -182,7 +116,31 @@ public class PageProject extends VBox {
         return budgetStatus;
     }
 
-    private VBox budgetList(){
+    @Override
+    public VBox teamList() {
+        teamListVBox.getChildren().clear();
+        List<User> users = TeamMemberController.getUsers(project.getId());
+        for (User user : users) {
+            teamListVBox.getChildren().add(teamMember(user));
+        }
+        return teamListVBox;
+    }
+
+    @Override
+    public HBox teamMember(User user) {
+        Image image = new Image(getClass().getResourceAsStream("/icons/user-circle-regular-240.png"));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        Label username = new Label(user.getUsername());
+        username.getStyleClass().add("h5");
+        HBox teamMember = new HBox(imageView, username);
+        teamMember.getStyleClass().add("container");
+        return teamMember;
+    }
+
+    @Override
+    public VBox budgetList() {
         budgetListVBox.getChildren().clear();
         List<Budget> budgets = BudgetController.getBudgets(project.getId());
         for (Budget budget : budgets) {
@@ -192,15 +150,44 @@ public class PageProject extends VBox {
         return budgetListVBox;
     }
 
-    private void addNewBudgetHandler() {
+    @Override
+    public void addNewTeamMember() {
+        String username = usernameField.getText();
+        if (username == null || username.isEmpty()) {
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("Username is required");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+            return;
+        }
+
+        User user = UserController.findUser(username);
+        if (user != null) {
+            TeamMemberController.addMember(project.getId(), user.getId());
+            refreshTeamList();
+        } else {
+            usernameField.clear();
+            usernameField.getStyleClass().add("error");
+            usernameField.setPromptText("User Not Found");
+            usernameField.setOnKeyTyped(event -> usernameField.getStyleClass().remove("error"));
+        }
+    }
+
+    @Override
+    public void refreshTeamList() {
+        teamList();
+    }
+
+    @Override
+    public void addNewBudgetHandler() {
         boolean isEmptyField = false;
-    
+
         if (budgetNameField.getText().isEmpty()) {
             budgetNameField.getStyleClass().add("error");
             budgetNameField.setPromptText("Budget name is required");
             isEmptyField = true;
         }
-    
+
         if (budgetPriceField.getText().isEmpty()) {
             budgetPriceField.getStyleClass().add("error");
             budgetPriceField.setPromptText("Budget price is required");
@@ -215,24 +202,45 @@ public class PageProject extends VBox {
                 isEmptyField = true;
             }
         }
-    
+
         if (isEmptyField) {
             budgetNameField.setOnKeyTyped(event -> budgetNameField.getStyleClass().remove("error"));
             budgetPriceField.setOnKeyTyped(event -> budgetPriceField.getStyleClass().remove("error"));
             return;
         }
-    
+
         BudgetController.addBudget(project.getId(), budgetNameField.getText(), Integer.parseInt(budgetPriceField.getText()));
         refreshBudgetList();
-    
+
         budgetNameField.clear();
         budgetPriceField.clear();
-    }    
+    }
 
-    private void refreshBudgetList() {
+    @Override
+    public void refreshBudgetList() {
         budgetList();
         int updatedRemainingBudget = SelfUtils.calculateBudget(project.getBudget(), BudgetController.getBudgets(project.getId()));
         remainingBudget.setText("Remaining Budget : " + SelfUtils.intToRupiah(updatedRemainingBudget));
+    }
+
+    private HBox createPropertySection(String title, String value) {
+        HBox hbox = new HBox();
+
+        VBox vbox = new VBox();
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("h5");
+        Label valueLabel = new Label(value);
+        valueLabel.getStyleClass().add("h5-thin");
+
+        vbox.getChildren().addAll(titleLabel, valueLabel);
+
+        Region spacerLeft = new Region();
+        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
+        Region spacerRight = new Region();
+        HBox.setHgrow(spacerRight, Priority.ALWAYS);
+
+        hbox.getChildren().addAll(spacerLeft, vbox, spacerRight);
+        return hbox;
     }
 
 }
